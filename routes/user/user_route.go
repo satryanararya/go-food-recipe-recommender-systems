@@ -7,15 +7,18 @@ import (
 	uuc "github.com/satryanararya/go-chefbot/usecases"
 	"github.com/satryanararya/go-chefbot/utils/password"
 	"github.com/satryanararya/go-chefbot/utils/validation"
+	"github.com/satryanararya/go-chefbot/utils/token"
 	"gorm.io/gorm"
 )
 
 func InitUserRoute(ug *echo.Group, db *gorm.DB, v *validation.Validator) {
 	userRepository := ur.NewUserRepository(db)
 	passUtil := password.NewPasswordUtil()
+	tokenUtil := token.NewTokenUtil()
 
-	userUseCase := uuc.NewUserUseCase(userRepository, passUtil)
-	userController := uc.NewUserController(userUseCase, v)
+	userUseCase := uuc.NewUserUseCase(userRepository, passUtil, tokenUtil)
+	userController := uc.NewUserController(userUseCase, v, tokenUtil)
 
 	ug.POST("/register", userController.Register)
+	ug.POST("/login", userController.Login)
 }

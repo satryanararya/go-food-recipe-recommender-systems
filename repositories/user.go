@@ -9,6 +9,7 @@ import (
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *entities.User) error
+	GetUser(ctx context.Context, user *entities.User) (*entities.User, error)
 }
 
 type userRepository struct {
@@ -26,4 +27,14 @@ func (ur *userRepository) CreateUser(ctx context.Context, user *entities.User) e
 		return err
 	}
 	return ur.DB.Create(user).Error
+}
+
+func (ur *userRepository) GetUser(ctx context.Context, user *entities.User) (*entities.User, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	if err := ur.DB.Where(user).First(user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
