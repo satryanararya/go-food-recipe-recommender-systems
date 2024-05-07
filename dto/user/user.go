@@ -5,3 +5,9 @@ type UserRegisterRequest struct {
 	Email    string `json:"email" validate:"required,email"` 
 	Password string `json:"password" validate:"required,min=8"`
 }
+
+type UserRegisterResponse struct {
+	ID int64 `json:"id"`
+	Username string `json:"username"`
+	Email string `json:"email"`
+}
