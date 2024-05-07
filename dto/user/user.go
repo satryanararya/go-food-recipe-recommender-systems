@@ -2,12 +2,24 @@ package dto
 
 type UserRegisterRequest struct {
 	Username string `json:"username" validate:"required,min=5,max=25"`
-	Email    string `json:"email" validate:"required,email"` 
+	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required,min=8"`
 }
 
 type UserRegisterResponse struct {
-	ID int64 `json:"id"`
+	ID       int64  `json:"id"`
 	Username string `json:"username"`
-	Email string `json:"email"`
+	Email    string `json:"email"`
+}
+
+type UserLoginRequest struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=8"`
+}
+
+type UserLoginResponse struct {
+	ID       int64  `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Token    string `json:"token"`
 }
