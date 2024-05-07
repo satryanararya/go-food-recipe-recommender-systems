@@ -33,9 +33,10 @@ func (uc *userController) Register(c echo.Context) error {
 		return http_util.HandleErrorResponse(c, http.StatusBadRequest, msg.MsgInvalidRequestData)
 	}
 
-	if err := uc.userUseCase.Register(c, req); err != nil {
+	res, err := uc.userUseCase.Register(c, req) 
+	if err != nil {
 		return http_util.HandleErrorResponse(c, http.StatusInternalServerError, msg.MsgUserCreationFailed)
 	}
 
-	return http_util.HandleSuccessResponse(c, http.StatusCreated, msg.MsgUserCreated, nil)
+	return http_util.HandleSuccessResponse(c, http.StatusCreated, msg.MsgUserCreated, res)
 }

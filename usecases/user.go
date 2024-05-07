@@ -11,7 +11,7 @@ import (
 )
 
 type UserUseCase interface {
-	Register(c echo.Context, req *dto.UserRegisterRequest) error
+	Register(c echo.Context, req *dto.UserRegisterRequest) (*dto.UserRegisterResponse, error)
 }
 
 type userUseCase struct {
@@ -26,13 +26,13 @@ func NewUserUseCase(ur repositories.UserRepository, pu password.PasswordUtil) *u
 	}
 }
 
-func (uc *userUseCase) Register(c echo.Context, req *dto.UserRegisterRequest) error {
+func (uc *userUseCase) Register(c echo.Context, req *dto.UserRegisterRequest) (*dto.UserRegisterResponse, error) {
 	ctx, cancel := context.WithCancel(c.Request().Context())
 	defer cancel()
 
 	hashedPassword, err := uc.passUtil.HashPassword(req.Password)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	user := &entities.User{
@@ -40,5 +40,9 @@ func (uc *userUseCase) Register(c echo.Context, req *dto.UserRegisterRequest) er
 		Email:    req.Email,
 		Password: hashedPassword,
 	}
-	return uc.userRepo.CreateUser(ctx, user)
+	return &dto.UserRegisterResponse{
+		ID: user.ID,
+		Username: user.Username,
+		Email: user.Email,
+	}, uc.userRepo.CreateUser(ctx, user)
 }
