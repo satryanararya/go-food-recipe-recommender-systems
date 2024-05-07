@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 
+	"github.com/satryanararya/go-chefbot/entities"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -29,5 +30,10 @@ func ConnectDB(config Config) *gorm.DB {
 		panic(err)
 	}
 
+	migrate(db)
 	return db
+}
+
+func migrate(db *gorm.DB) {
+	db.AutoMigrate(&entities.User{})
 }
