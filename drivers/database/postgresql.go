@@ -36,4 +36,5 @@ func ConnectDB(config Config) *gorm.DB {
 
 func migrate(db *gorm.DB) {
 	db.AutoMigrate(&entities.User{})
+	db.AutoMigrate(&entities.UserFoodPreference{})
 }

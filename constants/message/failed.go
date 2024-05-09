@@ -25,10 +25,11 @@ const (
 	MsgGetUserFailed      = "failed to retreive user"
 	MsgUpdateUserFailed   = "failed to update user"
 
-	// user preference
-	MsgUpdatePreferenceFailed  = "failed to update preference"
-	MsgGetPreferenceFailed     = "failed to get preference"
-	MsgPreferenceInputNotFound = "food/drink/dietary preference types not found"
+	// user food preference
+	MsgAddPreferenceFailed = "failed to add your food preference"
+	MsgEditPreferenceFailed  = "failed to update your food preference"
+	MsgDeletePreferenceFailed = "failed to delete your food preference"
+	MsgPreferenceInputNotFound = "preference types not found"
 
 	// token
 	MsgFailedGeneratingToken = "failed generating token"
