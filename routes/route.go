@@ -10,7 +10,9 @@ import (
 func InitRoute(e *echo.Echo, db *gorm.DB, v *validation.Validator) {
 	userRoute := e.Group("")
 	userFoodPreference := e.Group("/user-profile")
+	userCookingSkill := e.Group("/user-profile")
 
 	user.InitUserRoute(userRoute, db, v)
 	user.InitUserFoodPreferencesRoute(userFoodPreference, db, v)
+	user.InitUserCookingSkillRoute(userCookingSkill, db, v)
 }

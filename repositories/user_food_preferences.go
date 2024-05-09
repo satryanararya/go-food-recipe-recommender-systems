@@ -11,7 +11,7 @@ type UserFoodPreferencesRepository interface {
 	AddFoodPreference(ctx context.Context, userFoodPref *entities.UserFoodPreference) error
 	EditFoodPreference(ctx context.Context, userFoodPref *entities.UserFoodPreference) error
     DeleteFoodPreference(ctx context.Context, userID int64) error
-	GetFoodPreferenceByID(ctx context.Context, userID int64) (*entities.UserFoodPreference, error)
+	// GetFoodPreferenceByID(ctx context.Context, userID int64) (*entities.UserFoodPreference, error)
 }
 
 type userFoodPreferencesRepository struct {

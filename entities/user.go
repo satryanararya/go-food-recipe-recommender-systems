@@ -31,11 +31,10 @@ type UserFoodPreference struct {
 type UserCookingSkill struct {
 	gorm.Model
 	UserID              int64 `gorm:"not null"`
-	ExperienceYears     *int
-	TimeCommitment      *int
-	RecipeComplexity    *string
-	IngredientDiversity *string
-	Expertise           *string
+	ExperienceYears     string
+	TimeCommitment      string
+	RecipeComplexity    string
+	IngredientDiversity string
 }
 
 // TODO: Ngulik connect ke Ingredients
