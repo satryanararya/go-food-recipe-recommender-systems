@@ -1,4 +1,4 @@
-package dto
+package user
 
 type UserRegisterRequest struct {
 	Username string `json:"username" validate:"required,min=5,max=25"`
