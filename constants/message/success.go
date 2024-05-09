@@ -13,4 +13,8 @@ const (
 	MsgDeletePreferenceSuccess = "food preference deleted successfully"
 	MsgPreferenceUpdated         = "preference updated successfully"
 	MsgRetrievePreferenceSuccess = "preference retreived successfully"
+
+	// user cooking skill
+	MsgAddCookingSkillSuccess = "cooking skill added successfully"
+	MsgEditCookingSkillSuccess = "cooking skill edited successfully"
 )

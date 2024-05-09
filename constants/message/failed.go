@@ -31,6 +31,10 @@ const (
 	MsgDeletePreferenceFailed = "failed to delete your food preference"
 	MsgPreferenceInputNotFound = "preference types not found"
 
+	// user cooking skill
+	MsgAddCookingSkillFailed = "failed to add your cooking skill"
+	MsgEditCookingSkillFailed  = "failed to update your cooking skill"
+
 	// token
 	MsgFailedGeneratingToken = "failed generating token"
 	MsgUnauthorized          = "unauthorized user"
