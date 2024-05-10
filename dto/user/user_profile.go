@@ -12,4 +12,6 @@ type UserCookingSkillRequest struct {
 	IngredientDiversity string `json:"ingredient_diversity"`
 }
 
-//TODO: User Allergies
+type UserAllergiesRequest struct {
+    IngredientName string `json:"ingredient_name"`
+}

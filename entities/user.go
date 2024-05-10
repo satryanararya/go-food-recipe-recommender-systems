@@ -10,14 +10,14 @@ type User struct {
 	ID                 int64  `gorm:"primaryKey"`
 	Username           string `gorm:"unique;not null"`
 	Email              string `gorm:"unique;not null"`
-	Password           string
+	Password           string 
 	Token              string
-	UserFoodPreference UserFoodPreference 
-	UserCookingSkill   UserCookingSkill   
-	UserAllergies      []UserAllergies    
-	CreatedAt          time.Time          `gorm:"autoCreateTime"`
-	UpdatedAt          time.Time          `gorm:"autoUpdateTime"`
-	DeletedAt          gorm.DeletedAt     `gorm:"index"`
+	UserFoodPreference UserFoodPreference
+	UserCookingSkill   UserCookingSkill
+	UserAllergies      []UserAllergies
+	CreatedAt          time.Time      `gorm:"autoCreateTime"`
+	UpdatedAt          time.Time      `gorm:"autoUpdateTime"`
+	DeletedAt          gorm.DeletedAt `gorm:"index"`
 }
 
 // Additional user information - User Profile
@@ -40,6 +40,7 @@ type UserCookingSkill struct {
 // TODO: Ngulik connect ke Ingredients
 type UserAllergies struct {
 	gorm.Model
-	UserID       int64 `gorm:"not null"`
-	IngredientID *int64
+	UserID         int64 `gorm:"not null"`
+	IngredientID   int64
+	IngredientName string
 }

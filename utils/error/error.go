@@ -6,10 +6,14 @@ import (
 )
 
 var (
-	// Password
+	// password
 	ErrFailedHashingPassword = errors.New(msg.MsgFailedHashingPassword)
 	ErrPasswordMismatch      = errors.New(msg.MsgPasswordMismatch)
 
-	// Token
+	// token
 	ErrFailedGeneratingToken = errors.New(msg.MsgFailedGeneratingToken)
+
+	// external services
+	ErrExternalService = errors.New(msg.MsgExternalServiceError)
+	ErrItemNotFound    = errors.New(msg.MsgItemNotFound)
 )
