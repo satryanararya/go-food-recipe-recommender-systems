@@ -4,7 +4,7 @@ type Ingredient struct {
 	ID        int          `json:"id"`
 	Name      string       `json:"name"`
 	Image     string       `json:"image"`
-	Category  string       `json:"categoryPath"`
+	Category  []string       `json:"categoryPath"`
 	Cost      *[]Cost      `json:"estimatedCost"`
 	Nutrition *[]Nutrition `json:"nutrition"`
 }
@@ -35,4 +35,12 @@ type Calories struct {
 type WeightPerServing struct {
 	Amount float64 `json:"amount"`
 	Unit   string  `json:"unit"`
+}
+
+type SearchIngredientResponse struct {
+    Results []struct {
+        ID    int    `json:"id"`
+        Name  string `json:"name"`
+        Image string `json:"image"`
+    } `json:"results"`
 }

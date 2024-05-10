@@ -14,6 +14,7 @@ import (
 type UserUseCase interface {
 	Register(c echo.Context, req *dto.UserRegisterRequest) (*dto.UserRegisterResponse, error)
 	Login(c echo.Context, req *dto.UserLoginRequest) (*dto.UserLoginResponse, error)
+	GetUserByID(c echo.Context, id int64) (*entities.User, error)
 }
 
 type userUseCase struct {
@@ -75,4 +76,11 @@ func (uc *userUseCase) Login(c echo.Context, req *dto.UserLoginRequest) (*dto.Us
 		Email: user.Email,
 		Token: token,
 	}, nil
+}
+
+func (uc *userUseCase) GetUserByID(c echo.Context, id int64) (*entities.User, error) {
+	ctx, cancel := context.WithCancel(c.Request().Context())
+	defer cancel()
+
+	return uc.userRepo.GetUserByID(ctx, id)
 }

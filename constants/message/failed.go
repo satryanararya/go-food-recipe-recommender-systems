@@ -35,8 +35,17 @@ const (
 	MsgAddCookingSkillFailed = "failed to add your cooking skill"
 	MsgEditCookingSkillFailed  = "failed to update your cooking skill"
 
+	// user allergies
+	MsgAddUserAllergyFailed = "failed to add your allergy"
+
 	// token
 	MsgFailedGeneratingToken = "failed generating token"
 	MsgUnauthorized          = "unauthorized user"
 	MsgInvalidToken          = "invalid token"
+
+	MsgExternalServiceError   = "external service error"
+	MsgQueryMinimum           = "item must at least 3 characters"
+	MsgSearchItemFailed       = "failed to search item"
+	MsgItemNotFound           = "item not found"
+	MsgGetItemNutritionFailed = "failed to get item nutrition"
 )

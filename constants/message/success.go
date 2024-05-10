@@ -17,4 +17,7 @@ const (
 	// user cooking skill
 	MsgAddCookingSkillSuccess = "cooking skill added successfully"
 	MsgEditCookingSkillSuccess = "cooking skill edited successfully"
+
+	// user allergy
+	MsgAddUserAllergySuccess = "allergy added successfully"
 )

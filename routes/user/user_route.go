@@ -5,6 +5,7 @@ import (
 	uc "github.com/satryanararya/go-chefbot/controllers/user"
 	ur "github.com/satryanararya/go-chefbot/repositories"
 	uuc "github.com/satryanararya/go-chefbot/usecases"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/satryanararya/go-chefbot/utils/password"
 	"github.com/satryanararya/go-chefbot/utils/validation"
 	"github.com/satryanararya/go-chefbot/utils/token"
@@ -21,4 +22,7 @@ func InitUserRoute(ug *echo.Group, db *gorm.DB, v *validation.Validator) {
 
 	ug.POST("/register", userController.Register)
 	ug.POST("/login", userController.Login)
+
+	ug.Use(echojwt.WithConfig(token.GetJWTConfig()))
+	ug.GET("/user", userController.GetUserByID)
 }

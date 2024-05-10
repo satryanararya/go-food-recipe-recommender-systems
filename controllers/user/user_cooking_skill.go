@@ -57,3 +57,4 @@ func (ucsc *userCookingSkillController) EditUserCookingSkill(c echo.Context) err
 	}
 	return http_util.HandleSuccessResponse(c, http.StatusOK, msg.MsgEditCookingSkillSuccess, nil)
 }
+

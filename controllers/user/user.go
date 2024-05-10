@@ -60,3 +60,13 @@ func (uc *userController) Login(c echo.Context) error {
 	}
 	return http_util.HandleSuccessResponse(c, http.StatusOK, msg.MsgLoginSuccess, res)
 }
+
+func (uc *userController) GetUserByID(c echo.Context) error {
+	claims := uc.token.GetClaims(c)
+
+	res, err := uc.userUseCase.GetUserByID(c, claims.ID)
+	if err != nil {
+		return http_util.HandleErrorResponse(c, http.StatusInternalServerError, msg.MsgGetUserFailed)
+	}
+	return http_util.HandleSuccessResponse(c, http.StatusOK, msg.MsgRetrieveUserSuccess, res)
+}
