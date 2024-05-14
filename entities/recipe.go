@@ -17,6 +17,7 @@ type Recipe struct {
 	Diets               string
 	IsSustainable       bool
 	Instruction         string
+	RatingReview		*[]RatingReview `gorm:"foreignKey:RecipeID"`
 }
 
 type ExtendedIngredient struct {
