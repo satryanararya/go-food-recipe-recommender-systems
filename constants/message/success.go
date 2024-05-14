@@ -20,4 +20,8 @@ const (
 
 	// user allergy
 	MsgAddUserAllergySuccess = "allergy added successfully"
+
+	// recipe
+	MsgGetRecipeSuccess = "recipe retreived successfully"
+	MsgDeleteRecipeSuccess = "recipe deleted successfully"
 )
