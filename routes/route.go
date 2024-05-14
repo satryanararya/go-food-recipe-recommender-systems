@@ -19,5 +19,5 @@ func InitRoute(e *echo.Echo, db *gorm.DB, v *validation.Validator) {
 	user.InitUserFoodPreferencesRoute(userFoodPreferenceRoute, db, v)
 	user.InitUserCookingSkillRoute(userCookingSkillRoute, db, v)
 	user.InitUserAllergiesRoute(userAllergiesRoute, db, v)
-	recipe.InitRecipeRoute(recipeRoute, v)
+	recipe.InitRecipeRoute(recipeRoute, db, v)
 }
