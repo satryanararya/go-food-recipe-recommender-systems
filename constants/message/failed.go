@@ -38,6 +38,11 @@ const (
 	// user allergies
 	MsgAddUserAllergyFailed = "failed to add your allergy"
 
+	// recipe
+	MsgInvalidID = "invalid recipe ID"
+	MsgGetRecipeFailed = "failed to get recipe"
+	MsgDeleteRecipeFailed = "failed to delete recipe"
+
 	// token
 	MsgFailedGeneratingToken = "failed generating token"
 	MsgUnauthorized          = "unauthorized user"
