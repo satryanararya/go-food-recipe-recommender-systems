@@ -48,6 +48,11 @@ const (
 	MsgDeleteRatingReviewFailed = "failed to delete rating and review"
 	MsgGetRatingReviewFailed = "failed to retrieve rating and review"
 
+	// favorite recipe
+	MsgAddFavoriteRecipeFailed = "failed to add favorite recipe"
+	MsgRemoveFavoriteRecipeFailed = "failed to remove favorite recipe"
+	MsgGetFavoriteRecipesFailed = "failed to get favorite recipes"
+
 	// token
 	MsgFailedGeneratingToken = "failed generating token"
 	MsgUnauthorized          = "unauthorized user"

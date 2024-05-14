@@ -29,4 +29,9 @@ const (
 	MsgAddRatingReviewSuccess = "rating and review added successfully"
 	MsgDeleteRatingReviewSuccess = "rating and review deleted successfully"
 	MsgGetRatingReviewSuccess = "rating and review retreived successfully"
+
+	// favorite recipe
+	MsgAddFavoriteRecipeSuccess = "favorite recipe added successfully"
+	MsgRemoveFavoriteRecipeSuccess = "favorite recipe removed successfully"
+	MsgGetFavoriteRecipesSuccess = "favorite recipes retreived successfully"
 )
