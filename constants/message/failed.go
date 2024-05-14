@@ -43,6 +43,11 @@ const (
 	MsgGetRecipeFailed = "failed to get recipe"
 	MsgDeleteRecipeFailed = "failed to delete recipe"
 
+	// rating and review
+	MsgAddRatingReviewFailed = "failed to add rating and review"
+	MsgDeleteRatingReviewFailed = "failed to delete rating and review"
+	MsgGetRatingReviewFailed = "failed to retrieve rating and review"
+
 	// token
 	MsgFailedGeneratingToken = "failed generating token"
 	MsgUnauthorized          = "unauthorized user"
