@@ -38,6 +38,9 @@ func (uac *userAllergiesUseCase) GetIngredientInfo(ctx context.Context, userID i
 	var ingredient *entities.Ingredient
 	if exists {
 		ingredient, err = uac.ingredientRepo.GetByName(ctx, dto.IngredientName)
+		if err != nil {
+			return nil, err
+		}
 	} else {
 		ingredientID, err := uac.client.SearchIngredient(ctx, dto)
 		if err != nil {

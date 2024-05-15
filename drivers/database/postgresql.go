@@ -2,8 +2,10 @@ package database
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/satryanararya/go-chefbot/entities"
+	msg "github.com/satryanararya/go-chefbot/constants/message"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -37,7 +39,7 @@ func ConnectDB(config Config) *gorm.DB {
 }
 
 func migrate(db *gorm.DB) {
-	db.AutoMigrate(
+	err := db.AutoMigrate(
 		&entities.User{},
 		&entities.UserFoodPreference{},
 		&entities.UserCookingSkill{},
@@ -49,4 +51,7 @@ func migrate(db *gorm.DB) {
 		&entities.FavoriteRecipe{},
 		&entities.Recommendation{},
 	)
+	if err != nil {
+		log.Fatal(msg.MsgFailedMigrateDB)
+	}
 }
