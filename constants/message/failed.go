@@ -15,6 +15,7 @@ const (
 	// database
 	MsgFailedConnectDB = "failed connect to database"
 	MsgSeedFailed      = "database seeding failed"
+	MsgFailedMigrateDB = "failed to migrate database"
 
 	// users
 	MsgUserCreationFailed = "failed to create user"

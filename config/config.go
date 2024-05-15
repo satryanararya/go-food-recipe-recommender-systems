@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/satryanararya/go-chefbot/drivers/database"
 	"github.com/joho/godotenv"
+	"github.com/satryanararya/go-chefbot/drivers/database"
 )
 
 func LoadEnv() {
@@ -22,5 +22,6 @@ func InitConfigDB() database.Config {
 		DB_PASSWORD: os.Getenv("DB_PASSWORD"),
 		DB_NAME:     os.Getenv("DB_NAME"),
 		DB_PORT:     os.Getenv("DB_PORT"),
+		DB_SSL:      os.Getenv("DB_SSL"),
 	}
 }
