@@ -18,12 +18,14 @@ func InitRoute(e *echo.Echo, db *gorm.DB, v *validation.Validator) {
 	recipeRoute := e.Group("/recipe")
 	ratingReviewRoute := e.Group("/recipe")
 	favoriteRecipeRoute := e.Group("/recipe")
+	recommendationRoute := e.Group("/recipe")
 
 	user.InitUserRoute(userRoute, db, v)
 	user.InitUserFoodPreferencesRoute(userFoodPreferenceRoute, db, v)
 	user.InitUserCookingSkillRoute(userCookingSkillRoute, db, v)
 	user.InitUserAllergiesRoute(userAllergiesRoute, db, v)
 	recipe.InitRecipeRoute(recipeRoute, db, v)
+	recipe.InitRecommendationRoute(recommendationRoute, db)
 	ratingreview.InitRatingReviewRoute(ratingReviewRoute, db, v)
 	favrecipe.InitFavoriteRecipeRoute(favoriteRecipeRoute, db, v)
 }

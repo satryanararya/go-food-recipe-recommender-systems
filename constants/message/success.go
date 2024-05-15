@@ -34,4 +34,7 @@ const (
 	MsgAddFavoriteRecipeSuccess = "favorite recipe added successfully"
 	MsgRemoveFavoriteRecipeSuccess = "favorite recipe removed successfully"
 	MsgGetFavoriteRecipesSuccess = "favorite recipes retreived successfully"
+
+	// recommendation
+	MsgGetRecommendationSuccess = "recommendation retreived successfully"
 )

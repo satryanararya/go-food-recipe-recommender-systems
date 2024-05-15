@@ -7,11 +7,13 @@ import (
 	"net/http"
 
 	err_util "github.com/satryanararya/go-chefbot/utils/error"
+	rand_util "github.com/satryanararya/go-chefbot/utils/recommendation"
 )
 
 type RecipeClient interface {
 	SearchRecipe(ctx context.Context, name string) (SearchRecipeResponse, error)
 	GetRecipeInformation(ctx context.Context, recipeID int) (RecipeInformation, error)
+	GetMultipleRecipeInformation(ctx context.Context, recipeIDs []int) ([]RecipeInformation, error)
 }
 
 type recipeClient struct {
@@ -27,7 +29,7 @@ func NewRecipeClient(apiKey string) *recipeClient {
 }
 
 func (r *recipeClient) SearchRecipe(ctx context.Context, name string) (SearchRecipeResponse, error) {
-	url := fmt.Sprintf("https://api.spoonacular.com/recipes/complexSearch?query=%s", name)
+	url := fmt.Sprintf("https://api.spoonacular.com/recipes/complexSearch?query=%s&number=%d", name, rand_util.GenerateRandomNumber())
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -36,8 +38,11 @@ func (r *recipeClient) SearchRecipe(ctx context.Context, name string) (SearchRec
 
 	req.Header.Set("X-API-Key", r.APIKey)
 
+	fmt.Println("name", name)
+
 	resp, err := r.Client.Do(req)
 	if err != nil {
+		fmt.Println("err", err)
 		return SearchRecipeResponse{}, err_util.ErrExternalService
 	}
 	defer resp.Body.Close()
@@ -48,6 +53,7 @@ func (r *recipeClient) SearchRecipe(ctx context.Context, name string) (SearchRec
 
 	searchRecipeRes := new(SearchRecipeResponse)
 	err = json.NewDecoder(resp.Body).Decode(searchRecipeRes)
+	fmt.Println("searchRecipeRes", searchRecipeRes)
 	if err != nil {
 		return SearchRecipeResponse{}, err
 	}
@@ -82,4 +88,19 @@ func (r *recipeClient) GetRecipeInformation(ctx context.Context, recipeID int) (
 	}
 
 	return recipeInformationResponse, nil
+}
+
+func (r *recipeClient) GetMultipleRecipeInformation(ctx context.Context, recipeIDs []int) ([]RecipeInformation, error) {
+	var recipeInformations []RecipeInformation
+
+	for _, recipeID := range recipeIDs {
+		recipeInformation, err := r.GetRecipeInformation(ctx, recipeID)
+		if err != nil {
+			return nil, err
+		}
+
+		recipeInformations = append(recipeInformations, recipeInformation)
+	}
+
+	return recipeInformations, nil
 }

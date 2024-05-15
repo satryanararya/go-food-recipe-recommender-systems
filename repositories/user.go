@@ -12,6 +12,7 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, user *entities.User) error
 	GetUser(ctx context.Context, user *entities.User) (*entities.User, error)
 	GetUserByID(ctx context.Context, id int64) (*entities.User, error)
+	GetAllUsers(ctx context.Context) (*[]entities.User, error)
 }
 
 type userRepository struct {
@@ -51,4 +52,15 @@ func (ur *userRepository) GetUserByID(ctx context.Context, id int64) (*entities.
 		return nil, err
 	}
 	return user, nil
+}
+
+func (ur *userRepository) GetAllUsers(ctx context.Context) (*[]entities.User, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	users := new([]entities.User)
+	if err := ur.DB.Preload(clause.Associations).Find(users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }

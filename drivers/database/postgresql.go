@@ -45,5 +45,6 @@ func migrate(db *gorm.DB) {
 		&entities.ExtendedIngredient{},
 		&entities.RatingReview{},
 		&entities.FavoriteRecipe{},
+		&entities.Recommendation{},
 	)
 }
