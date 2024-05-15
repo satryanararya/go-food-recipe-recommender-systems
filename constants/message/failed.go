@@ -53,6 +53,12 @@ const (
 	MsgRemoveFavoriteRecipeFailed = "failed to remove favorite recipe"
 	MsgGetFavoriteRecipesFailed = "failed to get favorite recipes"
 
+	// recommendation
+	MsgGetRecommendationFailed = "failed to get recommendation"
+	MsgFailedAddRecommendationCron = "failed to add recommendation cron"
+	MsgFailedCreateRecommendation  = "failed to create recommendation"
+	MsgRecommendationNotFound      = "recommendation not found"
+
 	// token
 	MsgFailedGeneratingToken = "failed generating token"
 	MsgUnauthorized          = "unauthorized user"
