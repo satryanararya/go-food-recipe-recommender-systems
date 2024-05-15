@@ -18,6 +18,7 @@ type User struct {
 	Recipe             []Recipe       `gorm:"foreignKey:UserID"`
 	RatingReview	   *[]RatingReview `gorm:"foreignKey:UserID"`
 	FavoriteRecipe     *[]FavoriteRecipe `gorm:"foreignKey:UserID"`
+	Recommendations    *[]Recommendation
 	CreatedAt          time.Time      `gorm:"autoCreateTime"`
 	UpdatedAt          time.Time      `gorm:"autoUpdateTime"`
 	DeletedAt          gorm.DeletedAt `gorm:"index"`
