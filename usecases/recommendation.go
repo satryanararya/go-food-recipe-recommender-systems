@@ -96,24 +96,3 @@ func (r *recommendationUseCase) FetchOpenAIRecommendation() {
 
 	}
 }
-
-// users, err := r.userRepo.GetAllUser(ctx)
-// if err != nil {
-// 	log.Println(msg.MsgFailedGetAllUser)
-// 	return
-// }
-
-// for _, user := range *users {
-// 	openAIResponse, err := r.openAIClient.GetOpenAIResponse(ctx, user.ID)
-// 	if err != nil {
-// 		log.Println(msg.MsgFailedGetOpenAIResponse)
-// 		continue
-// 	}
-
-// 	recommendation := rec_util.ParseOpenAIResponse(openAIResponse)
-
-// 	if err := r.recommendationRepo.CreateRecommendation(ctx, recommendation); err != nil {
-// 		log.Println(msg.MsgFailedCreateRecommendation)
-// 		continue
-// 	}
-// }
