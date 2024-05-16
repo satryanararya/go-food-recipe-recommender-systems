@@ -1,0 +1,13 @@
+with-expecter: false
+all: true
+dir: 'mocks/{{.InterfaceDirRelative}}'
+filename: 'mock_{{.InterfaceName|snakecase}}.go'
+mockname: 'Mock{{.InterfaceName}}'
+packages:
+  github.com/satryanararya/go-chefbot/repositories:
+  github.com/satryanararya/go-chefbot/utils/password:
+  github.com/satryanararya/go-chefbot/utils/token:
+  github.com/satryanararya/go-chefbot/drivers/spoonacular_api/ingredients:
+  github.com/satryanararya/go-chefbot/drivers/spoonacular_api/recipe:
+  github.com/satryanararya/go-chefbot/drivers/openai:
+  github.com/satryanararya/go-chefbot/drivers/cloudinary:
