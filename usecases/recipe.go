@@ -219,16 +219,6 @@ func (ruc *recipeUseCase) GetRecipe(c echo.Context, id int64) (*dto.GetRecipeRes
 		Instruction:     recipe.Instruction,
 	}
 
-	// Convert the extended ingredients
-	// res.ExtendedIngredients = make([]dto.ExtendedIngredientDTO, len(recipe.ExtendedIngredients))
-	// for i, ingredient := range recipe.ExtendedIngredients {
-	// 	res.ExtendedIngredients[i] = dto.ExtendedIngredientDTO{
-	// 		Name:   ingredient.Name,
-	// 		Amount: ingredient.Amount,
-	// 		Unit:   ingredient.Unit,
-	// 	}
-	// }
-
 	return res, nil
 }
 
