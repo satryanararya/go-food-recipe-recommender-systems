@@ -41,7 +41,7 @@ func GetRecommendationPrompt(u *entities.User) string {
 		ingredientDiversity = u.UserCookingSkill.IngredientDiversity
 	}
 	if len(u.UserAllergies) != 0 {
-		allergies = (u.UserAllergies)[0].IngredientName
+		allergies = u.UserAllergies[0].Ingredient.Name
 	}
 	if len(*u.FavoriteRecipe) != 0 {
 		favoriteRecipe = (*u.FavoriteRecipe)[0].RecipeTitle

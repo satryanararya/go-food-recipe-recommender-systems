@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/satryanararya/go-chefbot/entities"
 )
 
-func ToStruct(result string, userID int64) *[]entities.Recommendation {
+func ToStruct(result string, userID uuid.UUID) *[]entities.Recommendation {
 	var recommendations []entities.Recommendation
 	splittedResult := strings.Split(result, "\n")
 

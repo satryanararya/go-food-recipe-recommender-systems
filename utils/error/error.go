@@ -16,4 +16,7 @@ var (
 	// external services
 	ErrExternalService = errors.New(msg.MsgExternalServiceError)
 	ErrItemNotFound    = errors.New(msg.MsgItemNotFound)
+
+	// pages
+	ErrPageNotFound = errors.New(msg.MsgPageNotFound)
 )

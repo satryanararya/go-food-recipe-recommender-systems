@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/google/uuid"
 	msg "github.com/satryanararya/go-chefbot/constants/message"
 	http_util "github.com/satryanararya/go-chefbot/utils/http"
 
@@ -14,7 +15,7 @@ import (
 )
 
 type JWTClaim struct {
-	ID int64 `json:"id"`
+	ID uuid.UUID `json:"id"`
 	jwt.RegisteredClaims
 }
 
