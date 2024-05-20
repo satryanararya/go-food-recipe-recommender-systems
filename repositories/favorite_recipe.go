@@ -3,14 +3,15 @@ package repositories
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/satryanararya/go-chefbot/entities"
 	"gorm.io/gorm"
 )
 
 type FavoriteRecipeRepository interface {
 	AddToFavorites(ctx context.Context, favoriteRecipe *entities.FavoriteRecipe) error
-	RemoveFromFavorites(ctx context.Context, userID int64, recipeID int64) error
-	FindFavoritesByUserID(ctx context.Context, userID int64) ([]entities.FavoriteRecipe, error)
+	RemoveFromFavorites(ctx context.Context, userID uuid.UUID, recipeID int64) error
+	FindFavoritesByUserID(ctx context.Context, userID uuid.UUID) ([]entities.FavoriteRecipe, error)
 }
 
 type favoriteRecipeRepository struct {
@@ -30,14 +31,14 @@ func (r *favoriteRecipeRepository) AddToFavorites(ctx context.Context, favoriteR
 	return r.DB.Create(favoriteRecipe).Error
 }
 
-func (r *favoriteRecipeRepository) RemoveFromFavorites(ctx context.Context, userID int64, recipeID int64) error {
+func (r *favoriteRecipeRepository) RemoveFromFavorites(ctx context.Context, userID uuid.UUID, recipeID int64) error {
 	if err := ctx.Err(); err != nil {
 		return err
 	}
 	return r.DB.Where("user_id = ? AND recipe_id = ?", userID, recipeID).Delete(&entities.FavoriteRecipe{}).Error
 }
 
-func (r *favoriteRecipeRepository) FindFavoritesByUserID(ctx context.Context, userID int64) ([]entities.FavoriteRecipe, error) {
+func (r *favoriteRecipeRepository) FindFavoritesByUserID(ctx context.Context, userID uuid.UUID) ([]entities.FavoriteRecipe, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}

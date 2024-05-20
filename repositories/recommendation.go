@@ -3,13 +3,14 @@ package repositories
 import (
 	"context"
 
-	"github.com/satryanararya/go-chefbot/entities"
+	"github.com/google/uuid"
 	rec_const "github.com/satryanararya/go-chefbot/constants/recommendation"
+	"github.com/satryanararya/go-chefbot/entities"
 	"gorm.io/gorm"
 )
 
 type RecommendationRepository interface {
-	GetRecommendation(ctx context.Context, userID int64) (*[]entities.Recommendation, error)
+	GetRecommendation(ctx context.Context, userID uuid.UUID) (*[]entities.Recommendation, error)
 	CreateRecommendation(ctx context.Context, recommendation *[]entities.Recommendation) error
 }
 
@@ -23,7 +24,7 @@ func NewRecommendationRepository(db *gorm.DB) *recommendationRepository {
 	}
 }
 
-func (r *recommendationRepository) GetRecommendation(ctx context.Context, userID int64) (*[]entities.Recommendation, error) {
+func (r *recommendationRepository) GetRecommendation(ctx context.Context, userID uuid.UUID) (*[]entities.Recommendation, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
