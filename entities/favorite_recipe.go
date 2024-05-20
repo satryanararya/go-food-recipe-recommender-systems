@@ -1,10 +1,14 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type FavoriteRecipe struct {
 	ID          int64 `gorm:"primaryKey"`
-	UserID      int64
+	UserID      uuid.UUID
 	RecipeID    int64
 	RecipeTitle string
 	CreatedAt   time.Time `gorm:"autoCreateTime"`
