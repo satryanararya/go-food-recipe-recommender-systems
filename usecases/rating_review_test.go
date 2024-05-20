@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/google/uuid"
 	dto "github.com/satryanararya/go-chefbot/dto/rating_review"
 	mock_repo "github.com/satryanararya/go-chefbot/mocks/repositories"
 
@@ -31,7 +32,7 @@ func TestCreateRatingReview(t *testing.T) {
 		Review: "Great",
 	}
 	d := &entities.RatingReview{
-		UserID: 1,
+		UserID: uuid.New(),
 		RecipeID: 123,
 		Rating: 5,
 		Review: "Great",
@@ -48,7 +49,7 @@ func TestCreateRatingReview(t *testing.T) {
 	mockRatingReviewRepo.On("Create", ctx, d).Return(nil)
 
 	ratingReviewUsecase := usecases.NewRatingReviewUseCase(mockRatingReviewRepo)
-	err := ratingReviewUsecase.CreateRatingReview(c, 1, 123, r)
+	err := ratingReviewUsecase.CreateRatingReview(c, uuid.New(), 123, r)
 	assert.NoError(t, err)
 }
 
@@ -64,7 +65,7 @@ func TestDeleteRatingReview(t *testing.T) {
 	mockRatingReviewRepo.On("Delete", ctx, int64(1), int64(123)).Return(nil)
 
 	ratingReviewUsecase := usecases.NewRatingReviewUseCase(mockRatingReviewRepo)
-	err := ratingReviewUsecase.DeleteRatingReview(c, 1, 123)
+	err := ratingReviewUsecase.DeleteRatingReview(c, uuid.New(), 123)
 	assert.NoError(t, err)
 }
 
@@ -72,7 +73,7 @@ func TestGetUserRatingReviews(t *testing.T) {
 	example := &[]entities.RatingReview{
 		{
 			ID:          1,
-			UserID:      1,
+			UserID:      uuid.New(),
 			RecipeID:    123,
 			Rating:      5,
 			Review:      "Great",
@@ -92,6 +93,6 @@ func TestGetUserRatingReviews(t *testing.T) {
 	mockRatingReviewRepo.On("FindByUserID", ctx, int64(1)).Return(*example, nil)
 
 	ratingReviewUsecase := usecases.NewRatingReviewUseCase(mockRatingReviewRepo)
-	_, err := ratingReviewUsecase.GetUserRatingReviews(c, 1)
+	_, err := ratingReviewUsecase.GetUserRatingReviews(c, uuid.New())
 	assert.NoError(t, err)
 }

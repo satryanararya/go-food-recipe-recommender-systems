@@ -2,18 +2,14 @@ package usecases
 
 import (
 	"context"
-	// "time"
-	// "errors"
-	// "net/http"
-	// "net/http/httptest"
 	"testing"
 
+	"github.com/google/uuid"
 	dto "github.com/satryanararya/go-chefbot/dto/user"
 
 	mock_driver "github.com/satryanararya/go-chefbot/mocks/drivers/spoonacular_api/ingredients"
 	mock_repo "github.com/satryanararya/go-chefbot/mocks/repositories"
 
-	// "github.com/labstack/echo/v4"
 	"github.com/satryanararya/go-chefbot/entities"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -46,7 +42,7 @@ func TestGetIngredientInfo(t *testing.T) {
 	}
 
 	// Buat contoh request dan response
-	userID := int64(1)
+	userID := uuid.New()
 	dto := &dto.UserAllergiesRequest{IngredientName: "Garlic"}
 	ingredient := &entities.Ingredient{ID: int64(1), Name: "Garlic"}
 
@@ -56,7 +52,7 @@ func TestGetIngredientInfo(t *testing.T) {
 	mockUserAllergiesRepo.On("Save", mock.Anything, userID, ingredient.ID).Return(nil)
 
 	// Panggil fungsi yang ingin diuji
-	result, err := uac.GetIngredientInfo(context.Background(), userID, dto)
+	result, err := uac.AddAllergies(context.Background(), userID, dto)
 
 	// Verifikasi hasil
 	assert.NoError(t, err)

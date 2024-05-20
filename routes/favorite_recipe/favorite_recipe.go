@@ -14,7 +14,8 @@ import (
 // InitFavoriteRecipeRoute initializes favorite recipe routes
 func InitFavoriteRecipeRoute(frg *echo.Group, db *gorm.DB, v *validation.Validator) {
 	favoriteRecipeRepo := fr.NewFavoriteRecipeRepository(db)
-	favoriteRecipeUseCase := fu.NewFavoriteRecipeUsecase(favoriteRecipeRepo)
+	recipeRepo := fr.NewRecipeRepository(db)
+	favoriteRecipeUseCase := fu.NewFavoriteRecipeUsecase(favoriteRecipeRepo, recipeRepo)
 
 	tokenUtil := token.NewTokenUtil()
 

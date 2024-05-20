@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/satryanararya/go-chefbot/entities"
 	"gorm.io/gorm"
 )
@@ -10,7 +11,7 @@ import (
 type UserFoodPreferencesRepository interface {
 	AddFoodPreference(ctx context.Context, userFoodPref *entities.UserFoodPreference) error
 	EditFoodPreference(ctx context.Context, userFoodPref *entities.UserFoodPreference) error
-    DeleteFoodPreference(ctx context.Context, userID int64) error
+    DeleteFoodPreference(ctx context.Context, userID uuid.UUID) error
 	// GetFoodPreferenceByID(ctx context.Context, userID int64) (*entities.UserFoodPreference, error)
 }
 
@@ -38,7 +39,7 @@ func (ur *userFoodPreferencesRepository) EditFoodPreference(ctx context.Context,
     return ur.DB.Session(&gorm.Session{FullSaveAssociations: true}).Where("user_id = ?", userFoodPref.UserID).Updates(userFoodPref).Error
 }
 
-func (ur *userFoodPreferencesRepository) DeleteFoodPreference(ctx context.Context, userID int64) error {
+func (ur *userFoodPreferencesRepository) DeleteFoodPreference(ctx context.Context, userID uuid.UUID) error {
     if err := ctx.Err(); err != nil {
         return err
     }

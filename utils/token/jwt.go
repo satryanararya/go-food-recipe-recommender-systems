@@ -4,6 +4,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/google/uuid"
 	error_util "github.com/satryanararya/go-chefbot/utils/error"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -11,7 +12,7 @@ import (
 )
 
 type TokenUtil interface {
-	GenerateToken(id int64) (string, error)
+	GenerateToken(id uuid.UUID) (string, error)
 	GetClaims(c echo.Context) *JWTClaim
 }
 
@@ -21,7 +22,7 @@ func NewTokenUtil() *tokenUtil {
 	return &tokenUtil{}
 }
 
-func (tu *tokenUtil) GenerateToken(id int64) (string, error) {
+func (tu *tokenUtil) GenerateToken(id uuid.UUID) (string, error) {
 	claims := JWTClaim{
 		ID: id,
 		RegisteredClaims: jwt.RegisteredClaims{

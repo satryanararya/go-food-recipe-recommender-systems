@@ -24,6 +24,7 @@ const (
 	// recipe
 	MsgGetRecipeSuccess = "recipe retreived successfully"
 	MsgDeleteRecipeSuccess = "recipe deleted successfully"
+	MsgUpdateRecipeSuccess = "recipe updated successfully"
 
 	// rating and review
 	MsgAddRatingReviewSuccess = "rating and review added successfully"

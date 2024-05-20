@@ -16,12 +16,12 @@ type MockIngredientClient struct {
 	mock.Mock
 }
 
-// GetIngredient provides a mock function with given fields: ctx, ingredientID
-func (_m *MockIngredientClient) GetIngredient(ctx context.Context, ingredientID int) (*ingredients.Ingredient, error) {
+// GetIngredientInfo provides a mock function with given fields: ctx, ingredientID
+func (_m *MockIngredientClient) GetIngredientInfo(ctx context.Context, ingredientID int) (*ingredients.Ingredient, error) {
 	ret := _m.Called(ctx, ingredientID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetIngredient")
+		panic("no return value specified for GetIngredientInfo")
 	}
 
 	var r0 *ingredients.Ingredient

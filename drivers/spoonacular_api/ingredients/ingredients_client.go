@@ -12,7 +12,7 @@ import (
 
 type IngredientClient interface {
 	SearchIngredient(ctx context.Context, dto *user.UserAllergiesRequest) (int, error)
-	GetIngredient(ctx context.Context, ingredientID int) (*Ingredient, error)
+	GetIngredientInfo(ctx context.Context, ingredientID int) (*Ingredient, error)
 }
 
 type ingredientClient struct {
@@ -63,8 +63,8 @@ func (c *ingredientClient) SearchIngredient(ctx context.Context, dto *user.UserA
 	return 0, fmt.Errorf("no results found for ingredient: %s", dto.IngredientName)
 }
 
-func (c *ingredientClient) GetIngredient(ctx context.Context, ingredientID int) (*Ingredient, error) {
-	url := fmt.Sprintf("https://api.spoonacular.com/food/ingredients/%d/information", ingredientID)
+func (c *ingredientClient) GetIngredientInfo(ctx context.Context, ingredientID int) (*Ingredient, error) {
+	url := fmt.Sprintf("https://api.spoonacular.com/food/ingredients/%d/information?amount=1", ingredientID)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {

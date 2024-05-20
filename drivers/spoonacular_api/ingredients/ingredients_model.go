@@ -5,19 +5,19 @@ type Ingredient struct {
 	Name      string       `json:"name"`
 	Image     string       `json:"image"`
 	Category  []string       `json:"categoryPath"`
-	Cost      *[]Cost      `json:"estimatedCost"`
-	Nutrition *[]Nutrition `json:"nutrition"`
+	Cost      Cost      `json:"estimatedCost"`
+	Nutrition Nutrition `json:"nutrition"`
 }
 
 type Cost struct {
-	Value int    `json:"value"`
+	Value float64    `json:"value"`
 	Unit  string `json:"unit"`
 }
 
 type Nutrition struct {
-	Nutrients        *[]Nutrients        `json:"nutrients"`
-	Calories         *[]Calories         `json:"caloricBreakdown"`
-	WeightPerServing *[]WeightPerServing `json:"weightPerServing"`
+	Nutrients        []Nutrients        `json:"nutrients"`
+	Calories         Calories         `json:"caloricBreakdown"`
+	WeightPerServing WeightPerServing `json:"weightPerServing"`
 }
 
 type Nutrients struct {

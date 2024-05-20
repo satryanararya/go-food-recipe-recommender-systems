@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/google/uuid"
 	dto "github.com/satryanararya/go-chefbot/dto/user"
 
 	mock_repo "github.com/satryanararya/go-chefbot/mocks/repositories"
@@ -33,7 +34,7 @@ func TestAddCookingSkill(t *testing.T){
 		IngredientDiversity: "jarang",
 	}
 	d := &entities.UserCookingSkill{
-		UserID: 1,
+		UserID: uuid.New(),
 		ExperienceYears: "0-2 tahun",
 		TimeCommitment: "1-2x per minggu",
 		RecipeComplexity: "sederhana",
@@ -50,7 +51,7 @@ func TestAddCookingSkill(t *testing.T){
 	mockUserCookingSkillRepo.On("AddCookingSkill", ctx, d).Return(nil)
 
 	userCookingSkillUsecase := usecases.NewUserCookingSkillUseCase(mockUserCookingSkillRepo)
-	err := userCookingSkillUsecase.AddCookingSkill(c, 1, r)
+	err := userCookingSkillUsecase.AddCookingSkill(c, uuid.New(), r)
 	assert.NoError(t, err)
 }
 
@@ -62,7 +63,7 @@ func TestEditCookingSkill(t *testing.T){
 		IngredientDiversity: "jarang",
 	}
 	d := &entities.UserCookingSkill{
-		UserID: 1,
+		UserID: uuid.New(),
 		ExperienceYears: "0-2 tahun",
 		TimeCommitment: "1-2x per minggu",
 		RecipeComplexity: "sederhana",
@@ -79,6 +80,6 @@ func TestEditCookingSkill(t *testing.T){
 	mockUserCookingSkillRepo.On("EditCookingSkill", ctx, d).Return(nil)
 
 	userCookingSkillUsecase := usecases.NewUserCookingSkillUseCase(mockUserCookingSkillRepo)
-	err := userCookingSkillUsecase.EditCookingSkill(c, 1, r)
+	err := userCookingSkillUsecase.EditCookingSkill(c, uuid.New(), r)
 	assert.NoError(t, err)
 }

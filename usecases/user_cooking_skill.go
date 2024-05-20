@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/satryanararya/go-chefbot/constants/enums"
 	dto "github.com/satryanararya/go-chefbot/dto/user"
@@ -13,8 +14,8 @@ import (
 )
 
 type UserCookingSkillUseCase interface {
-	AddCookingSkill(c echo.Context, userID int64, req *dto.UserCookingSkillRequest) error
-	EditCookingSkill(c echo.Context, userID int64, req *dto.UserCookingSkillRequest) error
+	AddCookingSkill(c echo.Context, userID uuid.UUID, req *dto.UserCookingSkillRequest) error
+	EditCookingSkill(c echo.Context, userID uuid.UUID, req *dto.UserCookingSkillRequest) error
 }
 
 type userCookingSkillUseCase struct {
@@ -27,11 +28,11 @@ func NewUserCookingSkillUseCase(repo repositories.UserCookingSkillRepository) *u
 	}
 }
 
-func (uc *userCookingSkillUseCase) AddCookingSkill(c echo.Context, userID int64, req *dto.UserCookingSkillRequest) error {
+func (uc *userCookingSkillUseCase) AddCookingSkill(c echo.Context, userID uuid.UUID, req *dto.UserCookingSkillRequest) error {
 	ctx, cancel := context.WithCancel(c.Request().Context())
 	defer cancel()
 
-	if err := uc.ValidateUserCookingSkillRequest(req); err != nil {
+	if err := uc.validateUserCookingSkillRequest(req); err != nil {
 		return err
 	}
 
@@ -46,11 +47,11 @@ func (uc *userCookingSkillUseCase) AddCookingSkill(c echo.Context, userID int64,
 	return uc.userCookingSkillRepo.AddCookingSkill(ctx, userCookingSkill)
 }
 
-func (uc *userCookingSkillUseCase) EditCookingSkill(c echo.Context, userID int64, req *dto.UserCookingSkillRequest) error {
+func (uc *userCookingSkillUseCase) EditCookingSkill(c echo.Context, userID uuid.UUID, req *dto.UserCookingSkillRequest) error {
 	ctx, cancel := context.WithCancel(c.Request().Context())
 	defer cancel()
 
-	if err := uc.ValidateUserCookingSkillRequest(req); err != nil {
+	if err := uc.validateUserCookingSkillRequest(req); err != nil {
 		return err
 	}
 
@@ -65,12 +66,18 @@ func (uc *userCookingSkillUseCase) EditCookingSkill(c echo.Context, userID int64
 	return uc.userCookingSkillRepo.EditCookingSkill(ctx, userCookingSkill)
 }
 
-func (uc *userCookingSkillUseCase) ValidateUserCookingSkillRequest(req *dto.UserCookingSkillRequest) error {
-	if !validation.IsValidEnumValue("ExperienceYears", req.ExperienceYears) ||
-		!validation.IsValidEnumValue("TimeCommitment", req.TimeCommitment) ||
-		!validation.IsValidEnumValue("RecipeComplexity", req.RecipeComplexity) ||
-		!validation.IsValidEnumValue("IngredientDiversity", req.IngredientDiversity) {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request data")
-	}
-	return nil
+func (uc *userCookingSkillUseCase) validateUserCookingSkillRequest(req *dto.UserCookingSkillRequest) error {
+    if req.ExperienceYears != "" && !validation.IsValidEnumValue("ExperienceYears", req.ExperienceYears) {
+        return echo.NewHTTPError(http.StatusBadRequest, "Invalid ExperienceYears")
+    }
+    if req.TimeCommitment != "" && !validation.IsValidEnumValue("TimeCommitment", req.TimeCommitment) {
+        return echo.NewHTTPError(http.StatusBadRequest, "Invalid TimeCommitment")
+    }
+    if req.RecipeComplexity != "" && !validation.IsValidEnumValue("RecipeComplexity", req.RecipeComplexity) {
+        return echo.NewHTTPError(http.StatusBadRequest, "Invalid RecipeComplexity")
+    }
+    if req.IngredientDiversity != "" && !validation.IsValidEnumValue("IngredientDiversity", req.IngredientDiversity) {
+        return echo.NewHTTPError(http.StatusBadRequest, "Invalid IngredientDiversity")
+    }
+    return nil
 }
