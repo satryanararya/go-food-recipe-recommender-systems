@@ -31,10 +31,11 @@ func InitRecipeRoute(rg *echo.Group, db *gorm.DB, v *validation.Validator) {
 
     rg.Use(echojwt.WithConfig(token.GetJWTConfig()))
 
+    rg.GET("", recipeController.GetUserRecipes)
     rg.GET("/search", recipeController.SearchRecipe)
     rg.GET("/info/:id", recipeController.GetRecipeInformation)
-    rg.GET("/:id", recipeController.GetRecipe)
     rg.POST("/create", recipeController.CreateRecipe)
-    rg.PUT("/update/:id", recipeController.UpdateRecipe)
-    rg.DELETE("/delete/:id", recipeController.DeleteRecipe)
+	rg.POST("/:recipeID/image", recipeController.UploadRecipeImage)
+	rg.PUT("/:recipeID", recipeController.UpdateRecipe)
+	rg.DELETE("/:recipeID", recipeController.DeleteRecipe)
 }

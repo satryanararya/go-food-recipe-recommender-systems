@@ -27,5 +27,5 @@ func InitUserAllergiesRoute(uag *echo.Group, db *gorm.DB, v *validation.Validato
 	userAllergiesController := uc.NewUserAllergiesController(userAllergiesUseCase, v, tokenUtil)
 
 	uag.Use(echojwt.WithConfig(token.GetJWTConfig()))
-	uag.POST("/allergies", userAllergiesController.AddUserAllergy)
+	uag.POST("/allergies", userAllergiesController.AddUserAllergies)
 }
