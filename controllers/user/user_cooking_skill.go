@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -53,8 +54,8 @@ func (ucsc *userCookingSkillController) EditUserCookingSkill(c echo.Context) err
 	}
 	err := ucsc.userCookingSkillUsecase.EditCookingSkill(c, claims.ID, req)
 	if err != nil {
+		fmt.Println("Error: ", err)
 		return http_util.HandleErrorResponse(c, http.StatusInternalServerError, msg.MsgEditCookingSkillFailed)
 	}
 	return http_util.HandleSuccessResponse(c, http.StatusOK, msg.MsgEditCookingSkillSuccess, nil)
 }
-

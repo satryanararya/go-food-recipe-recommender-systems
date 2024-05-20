@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -26,7 +27,7 @@ func NewUserAllergiesController(uac usecases.UserAllergiesUseCase, v *validation
 	}
 }
 
-func (uac *userAllergiesController) AddUserAllergy(c echo.Context) error {
+func (uac *userAllergiesController) AddUserAllergies(c echo.Context) error {
 	claims := uac.token.GetClaims(c)
 	var req = new(dto.UserAllergiesRequest)
 	if err := c.Bind(req); err != nil {
@@ -35,8 +36,9 @@ func (uac *userAllergiesController) AddUserAllergy(c echo.Context) error {
 	if err := uac.validator.Validate(req); err != nil {
 		return http_util.HandleErrorResponse(c, http.StatusBadRequest, msg.MsgInvalidRequestData)
 	}
-	res, err := uac.userAllergiesUseCase.GetIngredientInfo(c.Request().Context(), claims.ID, req)
+	res, err := uac.userAllergiesUseCase.AddAllergies(c.Request().Context(), claims.ID, req)
 	if err != nil {
+		fmt.Println("Error: ", err)
 		return http_util.HandleErrorResponse(c, http.StatusInternalServerError, msg.MsgAddUserAllergyFailed)
 	}
 	return http_util.HandleSuccessResponse(c, http.StatusCreated, msg.MsgAddUserAllergySuccess, res)
