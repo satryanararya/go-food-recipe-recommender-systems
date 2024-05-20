@@ -43,6 +43,7 @@ const (
 	MsgInvalidID = "invalid recipe ID"
 	MsgGetRecipeFailed = "failed to get recipe"
 	MsgDeleteRecipeFailed = "failed to delete recipe"
+	MsgUpdateRecipeFailed = "failed to update recipe"
 
 	// rating and review
 	MsgAddRatingReviewFailed = "failed to add rating and review"
@@ -70,4 +71,7 @@ const (
 	MsgSearchItemFailed       = "failed to search item"
 	MsgItemNotFound           = "item not found"
 	MsgGetItemNutritionFailed = "failed to get item nutrition"
+
+	// pages
+	MsgPageNotFound = "page not found"
 )
