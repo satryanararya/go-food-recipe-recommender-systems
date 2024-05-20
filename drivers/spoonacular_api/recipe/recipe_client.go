@@ -38,11 +38,8 @@ func (r *recipeClient) SearchRecipe(ctx context.Context, name string) (SearchRec
 
 	req.Header.Set("X-API-Key", r.APIKey)
 
-	fmt.Println("name", name)
-
 	resp, err := r.Client.Do(req)
 	if err != nil {
-		fmt.Println("err", err)
 		return SearchRecipeResponse{}, err_util.ErrExternalService
 	}
 	defer resp.Body.Close()
@@ -53,7 +50,6 @@ func (r *recipeClient) SearchRecipe(ctx context.Context, name string) (SearchRec
 
 	searchRecipeRes := new(SearchRecipeResponse)
 	err = json.NewDecoder(resp.Body).Decode(searchRecipeRes)
-	fmt.Println("searchRecipeRes", searchRecipeRes)
 	if err != nil {
 		return SearchRecipeResponse{}, err
 	}
