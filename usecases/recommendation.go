@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/robfig/cron"
 	msg "github.com/satryanararya/go-chefbot/constants/message"
@@ -16,7 +17,7 @@ import (
 )
 
 type RecommendationUseCase interface {
-	GetRecommendation(c echo.Context, userID int64) (*[]recipeClient.RecipeInformation, error)
+	GetRecommendation(c echo.Context, userID uuid.UUID) (*[]recipeClient.RecipeInformation, error)
 }
 
 type recommendationUseCase struct {
@@ -50,7 +51,7 @@ func (r *recommendationUseCase) StartRecommendationCron() {
 	}()
 }
 
-func (r *recommendationUseCase) GetRecommendation(c echo.Context, userID int64) (*[]recipeClient.RecipeInformation, error) {
+func (r *recommendationUseCase) GetRecommendation(c echo.Context, userID uuid.UUID) (*[]recipeClient.RecipeInformation, error) {
 	ctx, cancel := context.WithCancel(c.Request().Context())
 	defer cancel()
 

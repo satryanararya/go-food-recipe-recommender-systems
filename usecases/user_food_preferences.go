@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	dto "github.com/satryanararya/go-chefbot/dto/user"
 	"github.com/satryanararya/go-chefbot/entities"
@@ -10,9 +11,9 @@ import (
 )
 
 type UserFoodPreferencesUseCase interface {
-	AddFoodPreference(c echo.Context, id int64, req *dto.UserFoodPreferencesRequest) error
-	EditFoodPreference(c echo.Context, id int64, req *dto.UserFoodPreferencesRequest) error
-    DeleteFoodPreference(c echo.Context, id int64) error
+	AddFoodPreference(c echo.Context, id uuid.UUID, req *dto.UserFoodPreferencesRequest) error
+	EditFoodPreference(c echo.Context, id uuid.UUID, req *dto.UserFoodPreferencesRequest) error
+    DeleteFoodPreference(c echo.Context, id uuid.UUID) error
 }
 
 type userFoodPreferencesUseCase struct {
@@ -25,7 +26,7 @@ func NewUserFoodPreferencesUseCase(ufpr repositories.UserFoodPreferencesReposito
 	}
 }
 
-func (upc *userFoodPreferencesUseCase) AddFoodPreference(c echo.Context, id int64, req *dto.UserFoodPreferencesRequest) error {
+func (upc *userFoodPreferencesUseCase) AddFoodPreference(c echo.Context, id uuid.UUID, req *dto.UserFoodPreferencesRequest) error {
 	ctx, cancel := context.WithCancel(c.Request().Context())
 	defer cancel()
 
@@ -37,7 +38,7 @@ func (upc *userFoodPreferencesUseCase) AddFoodPreference(c echo.Context, id int6
 	return upc.userFoodPrefRepo.AddFoodPreference(ctx, userFoodPref)
 }
 
-func (upc *userFoodPreferencesUseCase) EditFoodPreference(c echo.Context, id int64, req *dto.UserFoodPreferencesRequest) error {
+func (upc *userFoodPreferencesUseCase) EditFoodPreference(c echo.Context, id uuid.UUID, req *dto.UserFoodPreferencesRequest) error {
     ctx, cancel := context.WithCancel(c.Request().Context())
     defer cancel()
 
@@ -49,7 +50,7 @@ func (upc *userFoodPreferencesUseCase) EditFoodPreference(c echo.Context, id int
     return upc.userFoodPrefRepo.EditFoodPreference(ctx, userFoodPref)
 }
 
-func (upc *userFoodPreferencesUseCase) DeleteFoodPreference(c echo.Context, id int64) error {
+func (upc *userFoodPreferencesUseCase) DeleteFoodPreference(c echo.Context, id uuid.UUID) error {
     ctx, cancel := context.WithCancel(c.Request().Context())
     defer cancel()
 

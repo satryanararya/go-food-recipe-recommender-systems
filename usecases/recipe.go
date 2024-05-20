@@ -2,23 +2,33 @@ package usecases
 
 import (
 	"context"
+	"fmt"
+	"math"
+	"strconv"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	cs "github.com/satryanararya/go-chefbot/drivers/cloudinary"
 	client "github.com/satryanararya/go-chefbot/drivers/spoonacular_api/recipe"
+	dto_p "github.com/satryanararya/go-chefbot/dto"
 	dto "github.com/satryanararya/go-chefbot/dto/recipe"
 	"github.com/satryanararya/go-chefbot/entities"
 	"github.com/satryanararya/go-chefbot/repositories"
+	err_util "github.com/satryanararya/go-chefbot/utils/error"
 )
 
 type RecipeUseCase interface {
+	// External
 	SearchRecipe(c echo.Context, name string) (client.SearchRecipeResponse, error)
 	GetRecipeInformation(c echo.Context, recipeID int) (client.RecipeInformation, error)
-	CreateRecipe(c echo.Context, id int64, req *dto.CreateRecipeRequest) (*dto.CreateRecipeResponse, error)
-	UpdateRecipe(c echo.Context, id int64, req *dto.UpdateRecipeRequest) error
-	GetRecipe(c echo.Context, id int64) (*dto.GetRecipeResponse, error)
-	DeleteRecipe(c echo.Context, id int64) error
+
+	CreateRecipe(c echo.Context, id uuid.UUID, req *dto.RecipeRequest) (*dto.RecipeResponse, error)
+	UploadRecipeImage(c echo.Context, id uuid.UUID, recipeID int, req *dto.RecipeImageRequest) error
+	GetUserRecipes(c echo.Context, id uuid.UUID, p *dto_p.PaginationRequest) ([]entities.Recipe, *dto_p.PaginationMetadata, *dto_p.Link, error)
+	UpdateRecipe(c echo.Context, id uuid.UUID, recipeID int, req *dto.RecipeRequest) (*dto.RecipeResponse, error)
+	DeleteRecipe(c echo.Context, id uuid.UUID, recipeID int) error
 }
 
 type recipeUseCase struct {
@@ -96,61 +106,48 @@ func (ruc *recipeUseCase) GetRecipeInformation(c echo.Context, recipeID int) (cl
 	return recipeInformation, nil
 }
 
-func (ruc *recipeUseCase) CreateRecipe(c echo.Context, id int64, req *dto.CreateRecipeRequest) (*dto.CreateRecipeResponse, error) {
+func (ruc *recipeUseCase) CreateRecipe(c echo.Context, id uuid.UUID, req *dto.RecipeRequest) (*dto.RecipeResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	formHeader, err := c.FormFile("image")
-	if err != nil {
-		return nil, err
-	}
+	diets := strings.Join(req.Diets, ", ")
 
-	formFile, err := formHeader.Open()
-	if err != nil {
-		return nil, err
-	}
-
-
-	imageURL, err := ruc.cloudinaryService.UploadImage(ctx, formFile)
-	if err != nil {
-		return nil, err
+	ingredients := make([]entities.RecipeIngredient, len(req.Ingredient))
+	for i, ingredientReq := range req.Ingredient {
+		ingredients[i] = entities.RecipeIngredient{
+			Name:     ingredientReq.Name,
+			Quantity: ingredientReq.Quantity,
+			Unit:     ingredientReq.Unit,
+		}
 	}
 
 	recipe := &entities.Recipe{
-		UserID:          id,
-		Title:           req.Title,
-		Image:           imageURL,
-		SourceName:      req.SourceName,
-		CookingMinutes:  req.CookingMinutes,
-		PricePerServing: req.PricePerServing,
-		ReadyInMinutes:  req.ReadyInMinutes,
-		Servings:        req.Servings,
-		HealthScore:     req.HealthScore,
-		Diets:           req.Diets,
-		IsSustainable:   req.IsSustainable,
-		Instruction:     req.Instruction,
+		UserID:            id,
+		Title:             req.Title,
+		SourceName:        *req.SourceName,
+		CookingMinutes:    req.CookingMinutes,
+		PricePerServing:   *req.PricePerServing,
+		ReadyInMinutes:    req.ReadyInMinutes,
+		Servings:          req.Servings,
+		Diets:             diets,
+		IsSustainable:     req.IsSustainable,
+		RecipeIngredients: ingredients,
+		Instruction:       req.Instruction,
 	}
 
-	err = ruc.recipeRepo.CreateRecipe(ctx, recipe)
+	err := ruc.recipeRepo.CreateRecipe(ctx, recipe)
 	if err != nil {
 		return nil, err
 	}
-
-	return &dto.CreateRecipeResponse{
-		ID:    recipe.ID,
+	return &dto.RecipeResponse{
 		Title: recipe.Title,
-		Image: recipe.Image,
+		Image: &recipe.Image,
 	}, nil
 }
 
-func (ruc *recipeUseCase) UpdateRecipe(c echo.Context, id int64, req *dto.UpdateRecipeRequest) error {
+func (ruc *recipeUseCase) UploadRecipeImage(c echo.Context, id uuid.UUID, recipeID int, req *dto.RecipeImageRequest) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
-	recipe, err := ruc.recipeRepo.GetRecipe(ctx, id)
-	if err != nil {
-		return err
-	}
 
 	formHeader, err := c.FormFile("image")
 	if err != nil {
@@ -159,7 +156,7 @@ func (ruc *recipeUseCase) UpdateRecipe(c echo.Context, id int64, req *dto.Update
 
 	formFile, err := formHeader.Open()
 	if err != nil {
-		return  err
+		return err
 	}
 
 	imageURL, err := ruc.cloudinaryService.UploadImage(ctx, formFile)
@@ -167,64 +164,130 @@ func (ruc *recipeUseCase) UpdateRecipe(c echo.Context, id int64, req *dto.Update
 		return err
 	}
 
-	// Update the recipe fields
+	recipe, err := ruc.recipeRepo.GetRecipe(ctx, recipeID)
+	if err != nil {
+		return err
+	}
+
+	// Check if the user is the owner of the recipe
+	if recipe.UserID != id {
+		return err
+	}
+
+	recipe.Image = imageURL
+
+	err = ruc.recipeRepo.UpdateRecipe(ctx, recipe)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (ruc *recipeUseCase) GetUserRecipes(c echo.Context, id uuid.UUID, p *dto_p.PaginationRequest) ([]entities.Recipe, *dto_p.PaginationMetadata, *dto_p.Link, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	baseURL := fmt.Sprintf(
+		"%s?limit=%d&page=",
+		c.Request().URL.Path,
+		p.Limit,
+	)
+	var (
+		next = baseURL + strconv.Itoa(p.Page+1)
+		prev = baseURL + strconv.Itoa(p.Page-1)
+	)
+	recipes, totalData, err := ruc.recipeRepo.GetUserRecipes(ctx, id, p)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	totalPage := int(math.Ceil(float64(totalData) / float64(p.Limit)))
+	meta := &dto_p.PaginationMetadata{
+		CurrentPage: p.Page,
+		TotalPage:   totalPage,
+		TotalData:   totalData,
+	}
+
+	if p.Page > totalPage {
+		return nil, nil, nil, err_util.ErrPageNotFound
+	}
+
+	if p.Page == 1 {
+		prev = ""
+	}
+
+	if p.Page == totalPage {
+		next = ""
+	}
+
+	link := &dto_p.Link{
+		Next: next,
+		Prev: prev,
+	}
+
+	return recipes, meta, link, nil
+}
+
+func (ruc *recipeUseCase) UpdateRecipe(c echo.Context, id uuid.UUID, recipeID int, req *dto.RecipeRequest) (*dto.RecipeResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	recipe, err := ruc.recipeRepo.GetRecipe(ctx, recipeID)
+	if err != nil {
+		return nil, err
+	}
+	if recipe.UserID != id {
+		return nil, err
+	}
+
 	recipe.Title = req.Title
-	recipe.Image = imageURL // Use the URL of the uploaded image
-	recipe.SourceName = req.SourceName
+	recipe.SourceName = *req.SourceName
 	recipe.CookingMinutes = req.CookingMinutes
-	recipe.PricePerServing = req.PricePerServing
+	recipe.PricePerServing = *req.PricePerServing
 	recipe.ReadyInMinutes = req.ReadyInMinutes
 	recipe.Servings = req.Servings
-	recipe.HealthScore = req.HealthScore
-	recipe.Diets = req.Diets
+	recipe.Diets = strings.Join(req.Diets, ", ")
 	recipe.IsSustainable = req.IsSustainable
 	recipe.Instruction = req.Instruction
 
-	// Update the extended ingredients
-	// recipe.ExtendedIngredients = make([]entities.ExtendedIngredient, len(req.ExtendedIngredients))
-	// for i, ingredientDTO := range req.ExtendedIngredients {
-	//     recipe.ExtendedIngredients[i] = entities.ExtendedIngredient{
-	//         Name:   ingredientDTO.Name,
-	//         Amount: ingredientDTO.Amount,
-	//         Unit:   ingredientDTO.Unit,
-	//     }
-	// }
+	ingredients := make([]entities.RecipeIngredient, len(req.Ingredient))
+	for i, ingredientReq := range req.Ingredient {
+		ingredients[i] = entities.RecipeIngredient{
+			Name:     ingredientReq.Name,
+			Quantity: ingredientReq.Quantity,
+			Unit:     ingredientReq.Unit,
+		}
+	}
+	recipe.RecipeIngredients = ingredients
 
-	// Update the recipe in the database
-	return ruc.recipeRepo.UpdateRecipe(ctx, recipe)
-}
-
-func (ruc *recipeUseCase) GetRecipe(c echo.Context, id int64) (*dto.GetRecipeResponse, error) {
-	ctx, cancel := context.WithCancel(c.Request().Context())
-	defer cancel()
-	// Fetch the recipe from the database
-	recipe, err := ruc.recipeRepo.GetRecipe(ctx, id)
+	err = ruc.recipeRepo.UpdateRecipe(ctx, recipe)
 	if err != nil {
 		return nil, err
 	}
 
-	res := &dto.GetRecipeResponse{
-		ID:              recipe.ID,
-		UserID:          recipe.UserID,
-		Title:           recipe.Title,
-		Image:           recipe.Image,
-		SourceName:      recipe.SourceName,
-		CookingMinutes:  recipe.CookingMinutes,
-		PricePerServing: recipe.PricePerServing,
-		ReadyInMinutes:  recipe.ReadyInMinutes,
-		Servings:        recipe.Servings,
-		HealthScore:     recipe.HealthScore,
-		Diets:           recipe.Diets,
-		IsSustainable:   recipe.IsSustainable,
-		Instruction:     recipe.Instruction,
-	}
-
-	return res, nil
+	return &dto.RecipeResponse{
+		Title: recipe.Title,
+		Image: &recipe.Image,
+	}, nil
 }
 
-func (ruc *recipeUseCase) DeleteRecipe(c echo.Context, id int64) error {
-	ctx, cancel := context.WithCancel(c.Request().Context())
+func (ruc *recipeUseCase) DeleteRecipe(c echo.Context, id uuid.UUID, recipeID int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	return ruc.recipeRepo.DeleteRecipe(ctx, id)
+	recipe, err := ruc.recipeRepo.GetRecipe(ctx, recipeID)
+	if err != nil {
+		return err
+	}
+	if recipe.UserID != id {
+		return err
+	}
+
+	err = ruc.recipeRepo.DeleteRecipe(ctx, recipe)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	dto "github.com/satryanararya/go-chefbot/dto/user"
 	"github.com/satryanararya/go-chefbot/entities"
@@ -14,7 +15,7 @@ import (
 type UserUseCase interface {
 	Register(c echo.Context, req *dto.UserRegisterRequest) (*dto.UserRegisterResponse, error)
 	Login(c echo.Context, req *dto.UserLoginRequest) (*dto.UserLoginResponse, error)
-	GetUserByID(c echo.Context, id int64) (*entities.User, error)
+	GetUserByID(c echo.Context, id uuid.UUID) (*dto.UserGetByIDResponse, error)
 }
 
 type userUseCase struct {
@@ -41,12 +42,12 @@ func (uc *userUseCase) Register(c echo.Context, req *dto.UserRegisterRequest) (*
 	}
 
 	user := &entities.User{
+		ID:       uuid.New(),
 		Username: req.Username,
 		Email:    req.Email,
 		Password: hashedPassword,
 	}
 	return &dto.UserRegisterResponse{
-		ID: user.ID,
 		Username: user.Username,
 		Email: user.Email,
 	}, uc.userRepo.CreateUser(ctx, user)
@@ -71,16 +72,27 @@ func (uc *userUseCase) Login(c echo.Context, req *dto.UserLoginRequest) (*dto.Us
 	}
 
 	return &dto.UserLoginResponse{
-		ID: user.ID,
 		Username: user.Username,
 		Email: user.Email,
 		Token: token,
 	}, nil
 }
 
-func (uc *userUseCase) GetUserByID(c echo.Context, id int64) (*entities.User, error) {
+func (uc *userUseCase) GetUserByID(c echo.Context, id uuid.UUID) (*dto.UserGetByIDResponse, error) {
 	ctx, cancel := context.WithCancel(c.Request().Context())
 	defer cancel()
 
-	return uc.userRepo.GetUserByID(ctx, id)
+	user, err := uc.userRepo.GetUserByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.UserGetByIDResponse{
+		Username: user.Username,
+		Email: user.Email,
+		UserFoodPreference: &user.UserFoodPreference,
+		UserCookingSkill: &user.UserCookingSkill,
+		UserAllergies: &user.UserAllergies,
+		Recipe: &user.Recipe,
+		FavoriteRecipe: user.FavoriteRecipe,
+	}, nil
 }

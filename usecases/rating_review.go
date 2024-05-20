@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	dto "github.com/satryanararya/go-chefbot/dto/rating_review"
 	"github.com/satryanararya/go-chefbot/entities"
@@ -10,9 +11,9 @@ import (
 )
 
 type RatingReviewUseCase interface {
-	CreateRatingReview(c echo.Context, userID int64, recipeID int64, req *dto.RatingReviewRequest) error
-	DeleteRatingReview(c echo.Context, userID int64, recipeID int64) error
-	GetUserRatingReviews(c echo.Context, userID int64) ([]dto.RatingReviewResponse, error)
+	CreateRatingReview(c echo.Context, userID uuid.UUID, recipeID int64, req *dto.RatingReviewRequest) error
+	DeleteRatingReview(c echo.Context, userID uuid.UUID, recipeID int64) error
+	GetUserRatingReviews(c echo.Context, userID uuid.UUID) ([]dto.RatingReviewResponse, error)
 }
 
 type ratingReviewUseCase struct {
@@ -25,7 +26,7 @@ func NewRatingReviewUseCase(rr repositories.RatingReviewRepository) *ratingRevie
 	}
 }
 
-func (rruc *ratingReviewUseCase) CreateRatingReview(c echo.Context, userID int64, recipeID int64, req *dto.RatingReviewRequest) error {
+func (rruc *ratingReviewUseCase) CreateRatingReview(c echo.Context, userID uuid.UUID, recipeID int64, req *dto.RatingReviewRequest) error {
 	ctx, cancel := context.WithCancel(c.Request().Context())
 	defer cancel()
 
@@ -38,14 +39,14 @@ func (rruc *ratingReviewUseCase) CreateRatingReview(c echo.Context, userID int64
 	return rruc.ratingReviewRepo.Create(ctx, ratingReview)
 }
 
-func (rruc *ratingReviewUseCase) DeleteRatingReview(c echo.Context, userID int64, recipeID int64) error {
+func (rruc *ratingReviewUseCase) DeleteRatingReview(c echo.Context, userID uuid.UUID, recipeID int64) error {
 	ctx, cancel := context.WithCancel(c.Request().Context())
 	defer cancel()
 
 	return rruc.ratingReviewRepo.Delete(ctx, userID, recipeID)
 }
 
-func (rruc *ratingReviewUseCase) GetUserRatingReviews(c echo.Context, userID int64) ([]dto.RatingReviewResponse, error) {
+func (rruc *ratingReviewUseCase) GetUserRatingReviews(c echo.Context, userID uuid.UUID) ([]dto.RatingReviewResponse, error) {
     ctx, cancel := context.WithCancel(c.Request().Context())
     defer cancel()
 
