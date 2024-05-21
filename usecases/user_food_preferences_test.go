@@ -53,6 +53,7 @@ func TestAddFoodPreference(t *testing.T) {
 	mockUserFoodPreferencesRepo.On("AddFoodPreference", ctx, d).Return(nil)
 
 	userFoodPreferencesUsecase := usecases.NewUserFoodPreferencesUseCase(mockUserFoodPreferencesRepo)
+
 	err := userFoodPreferencesUsecase.AddFoodPreference(c, uid, r)
 	assert.NoError(t, err)
 }
@@ -82,6 +83,7 @@ func TestEditFoodPreference(t *testing.T) {
 	mockUserFoodPreferencesRepo.On("EditFoodPreference", ctx, d).Return(nil)
 
 	userFoodPreferencesUsecase := usecases.NewUserFoodPreferencesUseCase(mockUserFoodPreferencesRepo)
+
 	err := userFoodPreferencesUsecase.EditFoodPreference(c, uid, r)
 	assert.NoError(t, err)
 }
@@ -99,6 +101,7 @@ func TestDeleteFoodPreference(t *testing.T) {
 	mockUserFoodPreferencesRepo.On("DeleteFoodPreference", ctx, uid).Return(nil)
 
 	userFoodPreferencesUsecase := usecases.NewUserFoodPreferencesUseCase(mockUserFoodPreferencesRepo)
+
 	err := userFoodPreferencesUsecase.DeleteFoodPreference(c, uid)
 	assert.NoError(t, err)
 }
