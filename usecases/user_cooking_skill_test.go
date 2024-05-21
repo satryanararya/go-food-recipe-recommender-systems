@@ -28,17 +28,18 @@ func TestNewUserCookingSkill(t *testing.T){
 
 func TestAddCookingSkill(t *testing.T){
 	r := &dto.UserCookingSkillRequest{
-		ExperienceYears: "0-2 tahun",
-		TimeCommitment: "1-2x per minggu",
-		RecipeComplexity: "sederhana",
-		IngredientDiversity: "jarang",
+		ExperienceYears: "0-2 years",
+		TimeCommitment: "1-2x per week",
+		RecipeComplexity: "simple",
+		IngredientDiversity: "frequent",
 	}
+	uid := uuid.New()
 	d := &entities.UserCookingSkill{
-		UserID: uuid.New(),
-		ExperienceYears: "0-2 tahun",
-		TimeCommitment: "1-2x per minggu",
-		RecipeComplexity: "sederhana",
-		IngredientDiversity: "jarang",
+		UserID: uid,
+		ExperienceYears: "0-2 years",
+		TimeCommitment: "1-2x per week",
+		RecipeComplexity: "simple",
+		IngredientDiversity: "frequent",
 	}
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodPost, "/cooking_skill/", nil)
@@ -51,26 +52,27 @@ func TestAddCookingSkill(t *testing.T){
 	mockUserCookingSkillRepo.On("AddCookingSkill", ctx, d).Return(nil)
 
 	userCookingSkillUsecase := usecases.NewUserCookingSkillUseCase(mockUserCookingSkillRepo)
-	err := userCookingSkillUsecase.AddCookingSkill(c, uuid.New(), r)
+	err := userCookingSkillUsecase.AddCookingSkill(c, uid, r)
 	assert.NoError(t, err)
 }
 
 func TestEditCookingSkill(t *testing.T){
 	r := &dto.UserCookingSkillRequest{
-		ExperienceYears: "0-2 tahun",
-		TimeCommitment: "1-2x per minggu",
-		RecipeComplexity: "sederhana",
-		IngredientDiversity: "jarang",
+		ExperienceYears: "0-2 years",
+		TimeCommitment: "1-2x per week",
+		RecipeComplexity: "simple",
+		IngredientDiversity: "frequent",
 	}
+	uid := uuid.New()
 	d := &entities.UserCookingSkill{
-		UserID: uuid.New(),
-		ExperienceYears: "0-2 tahun",
-		TimeCommitment: "1-2x per minggu",
-		RecipeComplexity: "sederhana",
-		IngredientDiversity: "jarang",
+		UserID: uid,
+		ExperienceYears: "0-2 years",
+		TimeCommitment: "1-2x per week",
+		RecipeComplexity: "simple",
+		IngredientDiversity: "frequent",
 	}
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodPost, "/cooking_skill/", nil)
+	req := httptest.NewRequest(http.MethodPut, "/cooking_skill/", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	ctx, cancel := context.WithCancel(c.Request().Context())
@@ -80,6 +82,6 @@ func TestEditCookingSkill(t *testing.T){
 	mockUserCookingSkillRepo.On("EditCookingSkill", ctx, d).Return(nil)
 
 	userCookingSkillUsecase := usecases.NewUserCookingSkillUseCase(mockUserCookingSkillRepo)
-	err := userCookingSkillUsecase.EditCookingSkill(c, uuid.New(), r)
+	err := userCookingSkillUsecase.EditCookingSkill(c, uid, r)
 	assert.NoError(t, err)
 }

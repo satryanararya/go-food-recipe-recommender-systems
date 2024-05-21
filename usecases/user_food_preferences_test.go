@@ -2,6 +2,7 @@ package usecases_test
 
 import (
 	"context"
+
 	// "time"
 	// "errors"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/google/uuid"
 	dto "github.com/satryanararya/go-chefbot/dto/user"
+	// "gorm.io/gorm"
 
 	mock_repo "github.com/satryanararya/go-chefbot/mocks/repositories"
 
@@ -34,8 +36,9 @@ func TestAddFoodPreference(t *testing.T) {
 		DietaryRestriction: &dietaryRestriction,
 		ReligiousReason:    &religiousReason,
 	}
+	uid := uuid.New()
 	d := &entities.UserFoodPreference{
-		UserID:             uuid.New(),
+		UserID:             uid,
 		DietaryRestriction: &dietaryRestriction,
 		ReligiousReason:    &religiousReason,
 	}
@@ -50,7 +53,7 @@ func TestAddFoodPreference(t *testing.T) {
 	mockUserFoodPreferencesRepo.On("AddFoodPreference", ctx, d).Return(nil)
 
 	userFoodPreferencesUsecase := usecases.NewUserFoodPreferencesUseCase(mockUserFoodPreferencesRepo)
-	err := userFoodPreferencesUsecase.AddFoodPreference(c, uuid.New(), r)
+	err := userFoodPreferencesUsecase.AddFoodPreference(c, uid, r)
 	assert.NoError(t, err)
 }
 
@@ -62,8 +65,9 @@ func TestEditFoodPreference(t *testing.T) {
 		DietaryRestriction: &dietaryRestriction,
 		ReligiousReason:    &religiousReason,
 	}
+	uid := uuid.New()
 	d := &entities.UserFoodPreference{
-		UserID:             uuid.New(),
+		UserID:             uid,
 		DietaryRestriction: &dietaryRestriction,
 		ReligiousReason:    &religiousReason,
 	}
@@ -78,11 +82,12 @@ func TestEditFoodPreference(t *testing.T) {
 	mockUserFoodPreferencesRepo.On("EditFoodPreference", ctx, d).Return(nil)
 
 	userFoodPreferencesUsecase := usecases.NewUserFoodPreferencesUseCase(mockUserFoodPreferencesRepo)
-	err := userFoodPreferencesUsecase.EditFoodPreference(c, uuid.New(), r)
+	err := userFoodPreferencesUsecase.EditFoodPreference(c, uid, r)
 	assert.NoError(t, err)
 }
 
 func TestDeleteFoodPreference(t *testing.T) {
+	uid := uuid.New()
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodDelete, "/food_preferences/", nil)
 	rec := httptest.NewRecorder()
@@ -91,9 +96,9 @@ func TestDeleteFoodPreference(t *testing.T) {
 	defer cancel()
 
 	mockUserFoodPreferencesRepo := new(mock_repo.MockUserFoodPreferencesRepository)
-	mockUserFoodPreferencesRepo.On("DeleteFoodPreference", ctx, int64(1)).Return(nil)
+	mockUserFoodPreferencesRepo.On("DeleteFoodPreference", ctx, uid).Return(nil)
 
 	userFoodPreferencesUsecase := usecases.NewUserFoodPreferencesUseCase(mockUserFoodPreferencesRepo)
-	err := userFoodPreferencesUsecase.DeleteFoodPreference(c, uuid.New())
+	err := userFoodPreferencesUsecase.DeleteFoodPreference(c, uid)
 	assert.NoError(t, err)
 }
