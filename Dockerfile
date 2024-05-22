@@ -16,7 +16,6 @@ FROM gcr.io/distroless/base-debian11 AS build-release
 WORKDIR /
 
 COPY --from=build /go-chefbot .
-COPY --from=build /app/.env .env
 
 EXPOSE 8080
 

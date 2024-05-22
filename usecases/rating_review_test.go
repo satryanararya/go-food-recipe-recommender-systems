@@ -27,14 +27,15 @@ func TestNewRatingReviewUseCase(t *testing.T) {
 }
 
 func TestCreateRatingReview(t *testing.T) {
+	uid := uuid.New()
 	r := &dto.RatingReviewRequest{
-		Rating: 5,
+		Rating: 5.0,
 		Review: "Great",
 	}
 	d := &entities.RatingReview{
-		UserID: uuid.New(),
+		UserID: uid,
 		RecipeID: 123,
-		Rating: 5,
+		Rating: 5.0,
 		Review: "Great",
 	}
 
@@ -49,11 +50,13 @@ func TestCreateRatingReview(t *testing.T) {
 	mockRatingReviewRepo.On("Create", ctx, d).Return(nil)
 
 	ratingReviewUsecase := usecases.NewRatingReviewUseCase(mockRatingReviewRepo)
-	err := ratingReviewUsecase.CreateRatingReview(c, uuid.New(), 123, r)
+	err := ratingReviewUsecase.CreateRatingReview(c, uid, 123, r)
 	assert.NoError(t, err)
 }
 
 func TestDeleteRatingReview(t *testing.T) {
+	uid := uuid.New()
+
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodDelete, "/rating_review/:id", nil)
 	rec := httptest.NewRecorder()
@@ -62,18 +65,19 @@ func TestDeleteRatingReview(t *testing.T) {
 	defer cancel()
 
 	mockRatingReviewRepo := new(mock_repo.MockRatingReviewRepository)
-	mockRatingReviewRepo.On("Delete", ctx, int64(1), int64(123)).Return(nil)
+	mockRatingReviewRepo.On("Delete", ctx, uid, int64(123)).Return(nil)
 
 	ratingReviewUsecase := usecases.NewRatingReviewUseCase(mockRatingReviewRepo)
-	err := ratingReviewUsecase.DeleteRatingReview(c, uuid.New(), 123)
+	err := ratingReviewUsecase.DeleteRatingReview(c, uid, 123)
 	assert.NoError(t, err)
 }
 
 func TestGetUserRatingReviews(t *testing.T) {
+	uid := uuid.New()
 	example := &[]entities.RatingReview{
 		{
 			ID:          1,
-			UserID:      uuid.New(),
+			UserID:      uid,
 			RecipeID:    123,
 			Rating:      5,
 			Review:      "Great",
@@ -90,9 +94,9 @@ func TestGetUserRatingReviews(t *testing.T) {
 	defer cancel()
 
 	mockRatingReviewRepo := new(mock_repo.MockRatingReviewRepository)
-	mockRatingReviewRepo.On("FindByUserID", ctx, int64(1)).Return(*example, nil)
+	mockRatingReviewRepo.On("FindByUserID", ctx, uid).Return(*example, nil)
 
 	ratingReviewUsecase := usecases.NewRatingReviewUseCase(mockRatingReviewRepo)
-	_, err := ratingReviewUsecase.GetUserRatingReviews(c, uuid.New())
+	_, err := ratingReviewUsecase.GetUserRatingReviews(c, uid)
 	assert.NoError(t, err)
 }
